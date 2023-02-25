@@ -6,10 +6,15 @@ import {
   CardMedia,
   CardContent,
 } from "@material-ui/core";
+import { useState } from "react";
+import ImageViewer from "react-simple-image-viewer";
 
 const SpotLight = ({ data }) => {
+  const [currentImage, setCurrentImage] = useState([]);
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
   const handleOpenMedia = (url) => {
-    window.open(url, "_blank");
+    setCurrentImage([url]);
+    setIsViewerOpen(true);
   };
   return (
     <Card>
@@ -33,6 +38,15 @@ const SpotLight = ({ data }) => {
           </Typography>
         </CardContent>
       </CardActionArea>
+      {isViewerOpen && (
+        <ImageViewer
+          src={currentImage}
+          currentIndex={0}
+          disableScroll={false}
+          closeOnClickOutside={true}
+          onClose={() => setIsViewerOpen(false)}
+        />
+      )}
     </Card>
   );
 };

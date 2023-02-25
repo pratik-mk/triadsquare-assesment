@@ -6,10 +6,16 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
+import { useState } from "react";
+import ImageViewer from "react-simple-image-viewer";
 
 export default function SimpleCard({ data }) {
+  const [currentImage, setCurrentImage] = useState([]);
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
+
   const handleOpenMedia = (url) => {
-    window.open(url, "_blank");
+    setCurrentImage([url]);
+    setIsViewerOpen(true);
   };
   return (
     <Card>
@@ -30,6 +36,15 @@ export default function SimpleCard({ data }) {
           </Typography>
         </CardContent>
       </CardActionArea>
+      {isViewerOpen && (
+        <ImageViewer
+          src={currentImage}
+          currentIndex={0}
+          disableScroll={false}
+          closeOnClickOutside={true}
+          onClose={() => setIsViewerOpen(false)}
+        />
+      )}
     </Card>
   );
 }

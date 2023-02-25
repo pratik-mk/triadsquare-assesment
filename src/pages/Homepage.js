@@ -4,10 +4,12 @@ import axios from "axios";
 import SimpleCard from "../components/SimpleCard";
 import Header from "../components/Header";
 import SpotLight from "../components/SpotLight";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 function Homepage() {
   const [latestApod, setLatestApod] = useState(null);
   const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
@@ -27,8 +29,11 @@ function Homepage() {
   };
 
   const fetchPrev = async (page) => {
+    setLoading(true);
     console.log({ page });
-    const today = currentDate;
+    let today = new Date(currentDate);
+    today.setDate(today.getDate() - 1);
+    today = today.toISOString().substring(0, 10);
     // get the previous 7th date from today
     const prevDate = new Date(today);
     prevDate.setDate(prevDate.getDate() - 7);
@@ -44,6 +49,7 @@ function Homepage() {
       );
       console.log(response.data.reverse());
       setItems([...items, ...response.data]);
+      setLoading(false);
     } catch (error) {
       console.error(error);
     }
@@ -59,8 +65,8 @@ function Homepage() {
   };
 
   useEffect(() => {
+    if (!latestApod) fetchLatest();
     fetchPrev(page);
-    fetchLatest();
   }, [page]);
 
   useEffect(() => {
@@ -89,6 +95,13 @@ function Homepage() {
             </Grid>
           ))}
         </Grid>
+        <div>
+          {loading && (
+            <>
+              <LinearProgress style={{ padding: "10px", margin: "20px, 0" }} />
+            </>
+          )}
+        </div>
       </Container>
     </div>
   );
